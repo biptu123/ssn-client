@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./style.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth";
 
 const Toggler = ({ toggleFlag, setToggleFlag }) => {
   return (
@@ -23,10 +24,31 @@ const Toggler = ({ toggleFlag, setToggleFlag }) => {
 };
 
 const LoginButton = () => {
+  const navigate = useNavigate();
   return (
-    <button className="login-button">
+    <button className="login-button" onClick={() => navigate("/login")}>
       <span className="top-key" />
       <span className="text">Login</span>
+      <span className="bottom-key-1" />
+      <span className="bottom-key-2" />
+    </button>
+  );
+};
+
+const DropdownMenu = () => {
+  const [auth, setAuth] = useAuth();
+  const handleLogout = () => {
+    setAuth({
+      ...auth,
+      user: null,
+      token: "",
+    });
+    localStorage.removeItem("auth");
+  };
+  return (
+    <button className="login-button" onClick={handleLogout}>
+      <span className="top-key" />
+      <span className="text">Logout</span>
       <span className="bottom-key-1" />
       <span className="bottom-key-2" />
     </button>
@@ -48,6 +70,7 @@ const NavLinkButton = ({ children, to, active }) => {
 
 const Header = () => {
   const [toggleFlag, setToggleFlag] = useState(false);
+  const [auth, setAuth] = useAuth();
 
   return (
     <>
@@ -75,7 +98,7 @@ const Header = () => {
               </ul>
             </div>
           </div>
-          <LoginButton />
+          {!auth?.user ? <LoginButton /> : <DropdownMenu />}
           <Toggler toggleFlag={toggleFlag} setToggleFlag={setToggleFlag} />
         </div>
       </nav>

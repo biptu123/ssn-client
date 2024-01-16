@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.css";
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
@@ -19,24 +20,24 @@ const Footer = () => {
           {/* Left */}
           {/* Right */}
           <div>
-            <a href className="text-white me-4">
+            <Link to="/" className="text-white me-4">
               <i className="fab fa-facebook-f" />
-            </a>
-            <a href className="text-white me-4">
+            </Link>
+            <Link to="/" className="text-white me-4">
               <i className="fab fa-twitter" />
-            </a>
-            <a href className="text-white me-4">
+            </Link>
+            <Link to="/" className="text-white me-4">
               <i className="fab fa-google" />
-            </a>
-            <a href className="text-white me-4">
+            </Link>
+            <Link to="/" className="text-white me-4">
               <i className="fab fa-instagram" />
-            </a>
-            <a href className="text-white me-4">
+            </Link>
+            <Link to="/" className="text-white me-4">
               <i className="fab fa-linkedin" />
-            </a>
-            <a href className="text-white me-4">
+            </Link>
+            <Link to="/" className="text-white me-4">
               <i className="fab fa-github" />
-            </a>
+            </Link>
           </div>
           {/* Right */}
         </section>

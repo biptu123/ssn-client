@@ -16,3 +16,27 @@
     right: 0;
     z-index: -1;
 }
+
+.login-form {
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.signup-form{
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+/* dashboard */
+
+.dashboard-section{
+    margin-top: 80px;
+    
+}
+
+.dashboard-wrapper{
+    min-height: 100vh;
+}

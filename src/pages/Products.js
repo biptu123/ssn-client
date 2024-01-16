@@ -4,7 +4,7 @@ import Layout from "../components/Layout/Layout";
 const Products = () => {
   return (
     <>
-      <Layout>
+      <Layout title="Products | SSN">
         <section className="hero-section">
           <h1>Products</h1>
           <p>Products</p>
