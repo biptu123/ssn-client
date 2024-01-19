@@ -91,6 +91,8 @@ const Header = () => {
             </div>
             <div className="offcanvas-body">
               <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
+                {/* {!auth?.user ? <LoginButton /> : <DropdownMenu />}
+                <hr style={{ height: "1rem" }} /> */}
                 <NavLinkButton to="/">Home</NavLinkButton>
                 <NavLinkButton to="/about">About</NavLinkButton>
                 <NavLinkButton to="/products">Products</NavLinkButton>

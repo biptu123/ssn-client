@@ -111,9 +111,19 @@
 
 .bestdeals-wrapper{
     padding-bottom: 10px;
+    position: relative;
+}
+.wave-1{
+    position: absolute;
+}
+
+.wave-2{
+    position: absolute;
+    overflow: hidden
 }
 
 .bestdeals-title {
+    padding-top: 20rem;
     position: relative;
     font-size: 1.5rem;
     font-weight: bold;
@@ -123,7 +133,7 @@
 
 }
 
-.bestdeals-title::before {
+/* .bestdeals-title::before {
     content: "";
     top: 0;
     position: absolute;
@@ -133,7 +143,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 0 0 0 20rem;
     overflow: hidden;
-}
+} */
 
 .bestdeals-title-content{
     text-transform: capitalize;
@@ -475,7 +485,7 @@
     .card-title {
         font-size: .5rem;
     }
-    .bestdeal-product{
+    .bestdeal-product  {
         width:13rem;
         height: 20rem;
     }
@@ -484,6 +494,16 @@
     }
     .bestdeals::-webkit-scrollbar{
         display: none;
+    }
+    .price-info p{
+        margin: 0;
+        font-weight: 700;
+        font-size: .7rem;
+        font-family: 'Courier New', Courier, monospace;
+        color: rgb(31, 31, 202);
+    }
+    .bestdeals-title {
+        padding-top: 10rem;
     }
 }
 
