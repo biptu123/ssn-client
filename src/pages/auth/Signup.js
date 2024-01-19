@@ -172,7 +172,7 @@ const Signup = () => {
                               {inputRefs.map((ref, index) => (
                                 <input
                                   key={index}
-                                  type="text"
+                                  type="number"
                                   className="form-control"
                                   value={verificationCode[index]}
                                   onChange={(e) =>
