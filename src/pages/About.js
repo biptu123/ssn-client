@@ -5,7 +5,7 @@ const About = () => {
   return (
     <>
       <Layout title="About us | SSN">
-        <section className="hero-section">
+        <section className="">
           <h1>About</h1>
           <p>About</p>
         </section>

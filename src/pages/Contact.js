@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <>
       <Layout title="Contact us | SSN">
-        <section className="hero-section">
+        <section className="">
           <h1>Contact</h1>
           <p>Contact us</p>
         </section>

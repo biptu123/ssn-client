@@ -1,0 +1,192 @@
+import React, { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/auth";
+import { Container, Nav, NavDropdown, Navbar, Offcanvas } from "react-bootstrap";
+import { FaShoppingCart } from "react-icons/fa";
+import Modal from 'react-modal';
+
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+// Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
+Modal.setAppElement('#root');
+
+
+const Toggler = ({ toggleFlag, setToggleFlag }) => {
+  return (
+    <div>
+      <label
+        className={`toggle ${toggleFlag ? "open" : null}`}
+        htmlFor="checkbox"
+        onClick={()=>setToggleFlag(!toggleFlag)}
+      >
+        <div id="bar1" className={`bars ${toggleFlag ? "open" : null}`} />
+        <div id="bar2" className={`bars ${toggleFlag ? "open" : null}`} />
+        <div id="bar3" className={`bars ${toggleFlag ? "open" : null}`} />
+      </label>
+    </div>
+  );
+};
+
+const LoginButton = ({ className, onClick }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate("/login");
+    if (onClick) onClick();
+  };
+
+  return (
+    <button className={`${className} login-button`} onClick={handleClick}>
+      <span className="top-key" />
+      <span className="text">Login</span>
+      <span className="bottom-key-1" />
+      <span className="bottom-key-2" />
+    </button>
+  );
+};
+
+const CartButton = () => {
+  const navigate = useNavigate();
+  return (
+    <button data-quantity="10" className="btn-cart">
+      <svg
+        className="icon-cart"
+        viewBox="0 0 24.38 30.52"
+        height="30.52"
+        width="24.38"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <title>icon-cart</title>
+        <path
+          transform="translate(-3.62 -0.85)"
+          d="M28,27.3,26.24,7.51a.75.75,0,0,0-.76-.69h-3.7a6,6,0,0,0-12,0H6.13a.76.76,0,0,0-.76.69L3.62,27.3v.07a4.29,4.29,0,0,0,4.52,4H23.48a4.29,4.29,0,0,0,4.52-4ZM15.81,2.37a4.47,4.47,0,0,1,4.46,4.45H11.35a4.47,4.47,0,0,1,4.46-4.45Zm7.67,27.48H8.13a2.79,2.79,0,0,1-3-2.45L6.83,8.34h3V11a.76.76,0,0,0,1.52,0V8.34h8.92V11a.76.76,0,0,0,1.52,0V8.34h3L26.48,27.4a2.79,2.79,0,0,1-3,2.44Zm0,0"
+        ></path>
+      </svg>
+      <span className="quantity"></span>
+    </button>
+  );
+};
+
+const DropdownMenu = () => {
+  const [auth, setAuth] = useAuth();
+  const handleLogout = () => {
+    setAuth({
+      ...auth,
+      user: null,
+      token: "",
+    });
+    localStorage.removeItem("auth");
+  };
+  return (
+    <button className="login-button" onClick={handleLogout}>
+      <span className="top-key" />
+      <span className="text">Logout</span>
+      <span className="bottom-key-1" />
+      <span className="bottom-key-2" />
+    </button>
+  );
+};
+
+const NavLinkButton = ({ children, to, active, onClick }) => {
+  return (
+    <li className="nav-item">
+      <NavLink
+        className={`nav-link mx-lg-2 ${active != null ? "active" : null}`}
+        to={to}
+        onClick={onClick}
+      >
+        {children}
+      </NavLink>
+    </li>
+  );
+};
+
+const Header = () => {
+  const [toggleFlag, setToggleFlag] = useState(false);
+  const [auth, setAuth] = useAuth();
+  const navigate = useNavigate();
+  let subtitle;
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setToggleFlag(false);
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = '#f00';
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const handleNavigation = () => {
+    // Close the off-canvas menu
+    setToggleFlag(false);
+  };
+
+
+  return (
+    <>
+      <nav className="navbar navbar-expand-lg fixed-top">
+        <div className="container-fluid">
+          <Link className="navbar-brand me-auto" to="/">
+            Logo
+          </Link>
+
+          <div
+            className="offcanvas offcanvas-end w-100"
+            tabIndex={-1}
+            id="navbarSupportedContent"
+            aria-labelledby="offcanvasNavbarLabel"
+          >
+            <div className="offcanvas-header">
+              {/* <h5 className="offcanvas-title" id="offcanvasNavbarLabel"></h5> */}
+            </div>
+            <div className="offcanvas-body">
+              <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
+                <NavLinkButton to="/" onClick={handleNavigation}>
+                  Home
+                </NavLinkButton>
+                <NavLinkButton to="/about" onClick={handleNavigation}>
+                  About
+                </NavLinkButton>
+                <NavLinkButton to="/products" onClick={handleNavigation}>
+                  Products
+                </NavLinkButton>
+                <NavLinkButton to="/contact" onClick={handleNavigation}>
+                  Contact
+                </NavLinkButton>
+                {!auth?.user ? (
+                  <LoginButton className="m-login" onClick={handleNavigation} />
+                ) : (
+                  <DropdownMenu />
+                )}
+              </ul>
+            </div>
+          </div>
+          {!auth?.user ? (
+            <LoginButton className="d-login" onClick={handleNavigation} />
+          ) : (
+            <DropdownMenu />
+          )}
+          <CartButton />
+          <Toggler toggleFlag={toggleFlag} setToggleFlag={setToggleFlag} />
+        </div>
+      </nav>
+    </>
+  );
+};
+
+export default Header;
