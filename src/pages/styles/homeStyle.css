@@ -267,7 +267,7 @@
     height: 100%;
     width: 0;
     border-radius: 15px;
-    background-color: #212121;
+    background-color: #21212157;
     /* z-index: -1; */
     -webkit-box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
     box-shadow: 4px 8px 19px -3px rgba(0, 0, 0, 0.27);
@@ -275,7 +275,7 @@
 }
 
 .add-product:hover {
-    color: #e8e8e8;
+    color: #fff8f8;
 }
 
 .add-product:hover::before {

@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { Nav, Navbar, Offcanvas } from "react-bootstrap";
 import { FaShoppingCart } from "react-icons/fa";
+import logo from '../../assets/images/logo.jpg';
 
 const Toggler = ({ toggleFlag, setToggleFlag }) => {
   return (
@@ -96,8 +97,8 @@ const Header = () => {
 
   return (
     <Navbar expand="lg" fixed="top">
-      <Navbar.Brand as={Link} to="/">
-        Logo
+      <Navbar.Brand as={Link} to="/" className="navbar-brand">
+        <img src={logo} className="img-fluid logo" alt="Logo"/>
       </Navbar.Brand>
 
 

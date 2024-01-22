@@ -6,13 +6,16 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { ProSidebarProvider } from "react-pro-sidebar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ProSidebarProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ProSidebarProvider>
   </AuthProvider>
 );
 

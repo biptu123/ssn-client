@@ -7,6 +7,16 @@
     /* z-index: 1; */
 }
 
+.products-section{
+    /* background: url('../public/background-home.jpg') no-repeat center; */
+        background-size: cover;
+        width: 100%;
+        margin-top: 80px;
+        min-height: 80vh;
+        /* background-color: #e6dede; */
+        padding: 0;
+        display: flex;
+}
 .hero-section::before{
     /* background-color: rgba(0, 0, 0, 0.6); */
     content: '';

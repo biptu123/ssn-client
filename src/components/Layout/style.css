@@ -308,9 +308,8 @@
 
 /* Footer */
 .footer{
-    /* position: relative; */
-    /* background-color: rgba(230, 222, 222);
-    opacity: .6; */
+    position: relative;
+    z-index: 3;
 }
 /* .footer::before {
     background-color: rgba(0, 0, 0, 0.6);
@@ -321,4 +320,23 @@
     left: 0;
     right: 0;
 } */
+.navbar-brand {
+    width: 90px;
+    height: 40px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 10px 8px 10px rgba(56, 52, 52, 0.8);
+    margin-left: 10px;
+    transition: box-shadow 0.3s ease-in-out;
+    border-radius: 20px 0 0 20px;
+    /* Adding a smooth transition effect */
+}
 
+
+.logo {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
