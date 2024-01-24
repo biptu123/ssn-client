@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
 import { Nav, Navbar, Offcanvas } from "react-bootstrap";
 import { FaShoppingCart } from "react-icons/fa";
-import logo from '../../assets/images/logo.jpg';
+import logo from "../../assets/images/logo.jpg";
 
 const Toggler = ({ toggleFlag, setToggleFlag }) => {
   return (
@@ -11,7 +11,7 @@ const Toggler = ({ toggleFlag, setToggleFlag }) => {
       <label
         className={`toggle ${toggleFlag ? "open" : null}`}
         htmlFor="checkbox"
-        onClick={()=>setToggleFlag(!toggleFlag)}
+        onClick={() => setToggleFlag(!toggleFlag)}
       >
         <div id="bar1" className={`bars ${toggleFlag ? "open" : null}`} />
         <div id="bar2" className={`bars ${toggleFlag ? "open" : null}`} />
@@ -41,8 +41,12 @@ const LoginButton = ({ className, onClick }) => {
 const CartButton = () => {
   const navigate = useNavigate();
   return (
-    <button data-quantity="10" className="btn-cart">
-      <FaShoppingCart className="icon-cart"/>
+    <button
+      data-quantity="10"
+      className="btn-cart"
+      onClick={() => navigate("/cart")}
+    >
+      <FaShoppingCart className="icon-cart" />
       <span className="quantity"></span>
     </button>
   );
@@ -98,9 +102,8 @@ const Header = () => {
   return (
     <Navbar expand="lg" fixed="top">
       <Navbar.Brand as={Link} to="/" className="navbar-brand">
-        <img src={logo} className="img-fluid logo" alt="Logo"/>
+        <img src={logo} className="img-fluid logo" alt="Logo" />
       </Navbar.Brand>
-
 
       <Offcanvas
         show={toggleFlag}
@@ -110,7 +113,7 @@ const Header = () => {
         <Offcanvas.Header>
           <Toggler toggleFlag={toggleFlag} setToggleFlag={setToggleFlag} />
         </Offcanvas.Header>
-        
+
         <Offcanvas.Body>
           <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
             <NavLinkButton to="/" onClick={handleNavigation}>
@@ -170,5 +173,3 @@ const Header = () => {
 };
 
 export default Header;
-
-

@@ -2,15 +2,8 @@ import React, { useState } from "react";
 import Layout from "../components/Layout/Layout";
 import offer1 from "../assets/images/offer1.jpg";
 
-import {
-  Sidebar,
-  Menu,
-  MenuItem,
-  SubMenu,
-  useProSidebar,
-} from "react-pro-sidebar";
+import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
-import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import { CiShop } from "react-icons/ci";
 import { FaJar } from "react-icons/fa6";
 import { GiMasonJar, GiMedicinePills, GiMedicines } from "react-icons/gi";
@@ -22,12 +15,10 @@ import { CgGym } from "react-icons/cg";
 import "./styles/productsStyle.css";
 
 const Products = () => {
-  const { collapseSidebar } = useProSidebar();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
-    collapseSidebar();
   };
 
   return (
@@ -51,8 +42,6 @@ const Products = () => {
                   justifyContent: "flex-end",
                 }}
               >
-                {/* <MenuItem icon={<FaWindows />}>Categories</MenuItem> */}
-
                 <MenuItem onClick={toggleSidebar}>
                   {isSidebarOpen ? (
                     <IoIosArrowDropleftCircle />

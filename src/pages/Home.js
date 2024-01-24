@@ -8,6 +8,7 @@ import "./styles/homeStyle.css";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ReactPlayer from "react-player";
+import { Link } from "react-router-dom";
 
 const OfferCarousel = () => {
   return (
@@ -38,27 +39,27 @@ const Categories = () => {
       <div className="categories">
         <div className="card" style={{ width: "18rem" }}>
           <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap" />
+          <img className="card-img-top" src={offer1} alt="Card image cap 1" />
           <h5 className="card-title">Proteins</h5>
         </div>
         <div className="card" style={{ width: "18rem" }}>
           <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap" />
+          <img className="card-img-top" src={offer1} alt="Card image cap 2" />
           <h5 className="card-title">Pre/post workout</h5>
         </div>
         <div className="card" style={{ width: "18rem" }}>
           <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap" />
+          <img className="card-img-top" src={offer1} alt="Card image cap 3" />
           <h5 className="card-title">Gainers</h5>
         </div>
         <div className="card" style={{ width: "18rem" }}>
           <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap" />
+          <img className="card-img-top" src={offer1} alt="Card image cap 4" />
           <h5 className="card-title">Vitamins</h5>
         </div>
         <div className="card" style={{ width: "18rem" }}>
           <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap" />
+          <img className="card-img-top" src={offer1} alt="Card image cap 5" />
           <h5 className="card-title">Creatine</h5>
         </div>
       </div>
@@ -186,23 +187,25 @@ const BestOffers = () => {
           <button className="add-product">Add to cart</button>
         </div>
       </div>
-      <button className="see-all">
-        <p>See All</p>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="4"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M14 5l7 7m0 0l-7 7m7-7H3"
-          ></path>
-        </svg>
-      </button>
+      <Link to="/products">
+        <button className="see-all">
+          <p>See All</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            ></path>
+          </svg>
+        </button>
+      </Link>
     </div>
   );
 };

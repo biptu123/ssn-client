@@ -9,6 +9,7 @@ import Signin from "./pages/auth/Signin";
 import Signup from "./pages/auth/Signup";
 import Dashboard from "./pages/user/Dashboard";
 import PrivateRoute from "./components/Routes/Private";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/products" Component={Products} />
         <Route path="/login" Component={Signin} />
         <Route path="/signup" Component={Signup} />
+        <Route path="/cart" Component={Cart} />
         <Route path="/*" Component={NotFound} />
       </Routes>
     </>

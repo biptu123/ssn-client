@@ -16,6 +16,8 @@
     border: none;
     background-color: transparent;
     position: relative;
+    margin-right: 10px;
+    padding-bottom: 5px;
 }
 
 .btn-cart::after {
@@ -185,6 +187,7 @@
     justify-content: center;
     gap: 10px;
     transition-duration: .5s;
+    margin-right: 10px;
     z-index: 2000;
 }
 
@@ -321,22 +324,25 @@
     right: 0;
 } */
 .navbar-brand {
-    width: 90px;
+    /* width: 90px;
     height: 40px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: transparent;
     box-shadow: 10px 8px 10px rgba(56, 52, 52, 0.8);
-    margin-left: 10px;
-    transition: box-shadow 0.3s ease-in-out;
-    border-radius: 20px 0 0 20px;
+    transition: box-shadow 0.3s ease-in-out; */
+    /* border-radius: 20px 0 0 20px; */
     /* Adding a smooth transition effect */
 }
 
 
 .logo {
-    height: 100%;
-    width: auto;
-    object-fit: contain;
+    width: 90px;
+    height: 20px !important;
+    object-fit: cover;
+    transform: scale(1.5);
+    margin-left: 30px;
 }
+
