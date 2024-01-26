@@ -6,7 +6,6 @@ import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Home from "./pages/Home";
 import Signin from "./pages/auth/Signin";
-import Signup from "./pages/auth/Signup";
 import Dashboard from "./pages/user/Dashboard";
 import PrivateRoute from "./components/Routes/Private";
 import Cart from "./pages/Cart";
@@ -23,7 +22,6 @@ function App() {
         <Route path="/contact" Component={Contact} />
         <Route path="/products" Component={Products} />
         <Route path="/login" Component={Signin} />
-        <Route path="/signup" Component={Signup} />
         <Route path="/cart" Component={Cart} />
         <Route path="/*" Component={NotFound} />
       </Routes>

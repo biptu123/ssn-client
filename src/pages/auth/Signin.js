@@ -1,33 +1,90 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../../context/auth";
 import Loader from "../../components/Loader";
+import styled from "styled-components";
+
+const OtpInput = styled.input`
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`;
 
 const Signin = () => {
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const rememberRef = useRef(false);
+  const [verifyForm, setVerifyForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [count, setCount] = useState(60);
+  const [resend, setResend] = useState(false);
+
+  const [verificationCode, setVerificationCode] = useState(["", "", "", ""]);
+  const inputRefs = [useRef(), useRef(), useRef(), useRef()];
 
   const [auth, setAuth] = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((prevValue) => --prevValue);
+    }, 1000);
 
+    if (count === 0) {
+      setResend(true);
+      return () => clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [count, navigate, location]);
+
+  const handleChange = (index, value) => {
+    const newVerificationCode = [...verificationCode];
+    newVerificationCode[index] = value;
+    setVerificationCode(newVerificationCode);
+
+    if (value !== "" && index === 3) {
+      handleSubmit(verificationCode.join("") + value);
+    }
+
+    // Focus on the next input if the value is not empty
+    if (value !== "" && index < inputRefs.length - 1) {
+      inputRefs[index + 1].current.focus();
+    }
+  };
+
+  const handleKeyDown = (index, event) => {
+    const newVerificationCode = [...verificationCode];
+    newVerificationCode[index] = "";
+
+    // Handle Backspace key press
+    if (event.key === "Backspace" && index > 0) {
+      event.preventDefault();
+      inputRefs[index - 1].current.focus();
+      newVerificationCode[index - 1] = "";
+    }
+
+    setVerificationCode(newVerificationCode);
+  };
+
+  const handleSubmit = async (otp) => {
     setLoading(true);
     try {
+      const user = {
+        phone,
+        otp,
+      };
+      console.log(user);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/login`,
-        {
-          phone,
-          password,
-        }
+        user
       );
 
       setTimeout(() => {
@@ -43,12 +100,53 @@ const Signin = () => {
           token: response.data.token,
         });
         localStorage.removeItem("auth");
-        if (rememberRef.current.checked) {
-          localStorage.setItem("auth", JSON.stringify(response.data));
-        }
+        localStorage.setItem("auth", JSON.stringify(response.data));
+
         setTimeout(() => {
+          setVerifyForm(false);
           navigate(location.state || "/");
         }, 1000);
+      } else {
+        toast.error(response.data.message);
+        setTimeout(() => {
+          setVerifyForm(false);
+          setLoading(false);
+        }, 200);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+      setTimeout(() => {
+        setVerifyForm(false);
+        setLoading(false);
+      }, 200);
+    }
+  };
+
+  const sendOtp = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    const user = {
+      phone,
+    };
+
+    console.log(user);
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/auth/sendotp`,
+        user
+      );
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 200);
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setVerifyForm(true);
+        setCount(60);
+        setResend(false);
       } else {
         toast.error(response.data.message);
       }
@@ -76,74 +174,76 @@ const Signin = () => {
                 />
               </div>
               <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form onSubmit={handleSubmit}>
-                  {/* Email input */}
-                  <div className="form-outline mb-4 form-floating">
-                    <input
-                      type="text"
-                      id="phone"
-                      className="form-control form-control-lg"
-                      placeholder="Enter a valid phone number"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                    <label className="form-label" htmlFor="form3Example3">
-                      Phone number
-                    </label>
-                  </div>
-                  {/* Password input */}
-                  <div className="form-outline mb-3 form-floating">
-                    <input
-                      type="password"
-                      id="password"
-                      className="form-control form-control-lg"
-                      placeholder="Enter password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <label className="form-label" htmlFor="form3Example4">
-                      Password
-                    </label>
-                  </div>
-                  <div className="d-flex justify-content-between align-items-center">
-                    {/* Checkbox */}
-                    <div className="form-check mb-0">
-                      <input
-                        className="form-check-input me-2"
-                        type="checkbox"
-                        id="form2Example3"
-                        ref={rememberRef}
-                      />
-                      <label
-                        className="form-check-label"
+                {verifyForm ? (
+                  <div className="d-flex flex-column justify-content-center align-items-center container">
+                    <div className="card py-5 px-3">
+                      <h5 className="m-0">Mobile phone verification</h5>
+                      <span className="mobile-text">
+                        Enter the code we just send on your mobile phone{" "}
+                        <b className="text-danger">+91 {phone}</b>
+                      </span>
+                      <div className="d-flex flex-row mt-5">
+                        {inputRefs.map((ref, index) => (
+                          <OtpInput
+                            key={index}
+                            type="number"
+                            className="form-control"
+                            value={verificationCode[index]}
+                            onChange={(e) =>
+                              handleChange(index, e.target.value)
+                            }
+                            onKeyDown={(e) => handleKeyDown(index, e)}
+                            ref={ref}
+                          />
+                        ))}
+                      </div>
+                      {/* Checkbox */}
+                    </div>
+                    <div className="form-check mb-0 mt-0">
+                      <button
+                        type="button"
+                        className="btn btn-link"
                         htmlFor="form2Example3"
+                        onClick={sendOtp}
+                        disabled={!resend}
                       >
-                        Remember me
+                        resend otp
+                      </button>
+                      {count > 0 && `in ${count}`}
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={sendOtp}>
+                    {/* Email input */}
+                    <div className="form-outline mb-4 form-floating">
+                      <input
+                        type="text"
+                        id="phone"
+                        className="form-control form-control-lg"
+                        placeholder="Enter a valid phone number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                      <label className="form-label" htmlFor="form3Example3">
+                        Phone number
                       </label>
                     </div>
-                    <Link to="/forgot-password" className="text-body">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <div className="text-center text-lg-start mt-4 pt-2">
-                    <button
-                      type="submit"
-                      className="btn btn-primary btn-lg"
-                      style={{
-                        paddingLeft: "2.5rem",
-                        paddingRight: "2.5rem",
-                      }}
-                    >
-                      Login
-                    </button>
-                    <p className="small fw-bold mt-2 pt-1 mb-0">
-                      Don't have an account?{" "}
-                      <Link to="/signup" className="link-danger">
-                        Register
-                      </Link>
-                    </p>
-                  </div>
-                </form>
+
+                    <div className="d-flex justify-content-between align-items-center"></div>
+                    <div className="text-center text-lg-start mt-4 pt-2">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-lg"
+                        style={{
+                          paddingLeft: "2.5rem",
+                          paddingRight: "2.5rem",
+                        }}
+                      >
+                        Login
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </div>
