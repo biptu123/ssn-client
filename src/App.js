@@ -9,6 +9,9 @@ import Signin from "./pages/auth/Signin";
 import Dashboard from "./pages/user/Dashboard";
 import PrivateRoute from "./components/Routes/Private";
 import Cart from "./pages/Cart";
+import AdminRoutes from "./components/Routes/AdminRoutes";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AddProduct from "./pages/admin/AddProduct";
 
 function App() {
   return (
@@ -16,7 +19,11 @@ function App() {
       <Routes>
         <Route exact path="/" Component={Home} />
         <Route path="/user" Component={PrivateRoute}>
-          <Route path="dashboard" Component={Dashboard} />
+          <Route path="" Component={Dashboard} />
+        </Route>
+        <Route path="/admin" Component={AdminRoutes}>
+          <Route path="" Component={AdminDashboard} />
+          <Route path="add-product" Component={AddProduct} />
         </Route>
         <Route path="/about" Component={About} />
         <Route path="/contact" Component={Contact} />

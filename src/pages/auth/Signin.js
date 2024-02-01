@@ -81,7 +81,6 @@ const Signin = () => {
         phone,
         otp,
       };
-      console.log(user);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/login`,
         user
@@ -130,8 +129,6 @@ const Signin = () => {
       phone,
     };
 
-    console.log(user);
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/sendotp`,
@@ -143,7 +140,8 @@ const Signin = () => {
       }, 200);
 
       if (response.data.success) {
-        toast.success(response.data.message);
+        console.log(response.data);
+        toast.success(response.data.message[0]);
         setVerifyForm(true);
         setCount(60);
         setResend(false);

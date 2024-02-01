@@ -52,7 +52,7 @@ const CartButton = () => {
   );
 };
 
-const DropdownMenu = () => {
+const DropdownMenu = ({ className }) => {
   const [auth, setAuth] = useAuth();
   const handleLogout = () => {
     setAuth({
@@ -63,7 +63,7 @@ const DropdownMenu = () => {
     localStorage.removeItem("auth");
   };
   return (
-    <button className="login-button" onClick={handleLogout}>
+    <button className={`login-button ${className}`} onClick={handleLogout}>
       <span className="top-key" />
       <span className="text">Logout</span>
       <span className="bottom-key-1" />
@@ -137,7 +137,7 @@ const Header = () => {
         </Offcanvas.Body>
       </Offcanvas>
 
-      <Navbar.Collapse id="navbarNav" className="justify-content-end">
+      <Navbar.Collapse id="navbarNav" className="justify-content-end mx-3">
         <Nav className="flex-grow-1 pe-3">
           <NavLinkButton to="/" onClick={handleNavigation}>
             Home
@@ -154,7 +154,7 @@ const Header = () => {
           {!auth?.user ? (
             <LoginButton className="m-login" onClick={handleNavigation} />
           ) : (
-            <DropdownMenu />
+            <DropdownMenu className="m-login" />
           )}
         </Nav>
       </Navbar.Collapse>
@@ -163,7 +163,7 @@ const Header = () => {
         {!auth?.user ? (
           <LoginButton className="d-login" onClick={handleNavigation} />
         ) : (
-          <DropdownMenu />
+          <DropdownMenu className="d-login" />
         )}
         <CartButton />
         <Toggler toggleFlag={toggleFlag} setToggleFlag={setToggleFlag} />
