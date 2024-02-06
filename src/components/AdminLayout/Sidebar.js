@@ -60,12 +60,10 @@ const SidebarButton = styled.div`
 `;
 
 const Sidebar = () => {
-  const [activeButton, setActiveButton] = useState(null);
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeButton, setActiveButton] = useState();
+  const [activeDropdown, setActiveDropdown] = useState();
 
-  const [dropdownStates, setDropdownStates] = useState({
-    products: false,
-  });
+  const [dropdownStates, setDropdownStates] = useState({});
 
   const toggleDropdown = (dropdownKey) => {
     setDropdownStates((prevStates) => ({
@@ -76,7 +74,7 @@ const Sidebar = () => {
 
   const handleButtonClick = (buttonKey) => {
     setActiveButton(buttonKey);
-    navigate(buttonKey);
+    navigate(`/admin/${buttonKey}`);
   };
 
   const navigate = useNavigate();
@@ -126,6 +124,17 @@ const Sidebar = () => {
                 Preview
               </DropdownItem>
             </Dropdown>
+          </SidebarButtonsWrapper>
+          <SidebarButtonsWrapper>
+            <SidebarButton
+              onClick={() => {
+                setActiveDropdown("categories");
+                navigate("/admin/categories");
+              }}
+              active={activeDropdown === "categories"}
+            >
+              Categories
+            </SidebarButton>
           </SidebarButtonsWrapper>
           <SidebarButtonsWrapper>
             <SidebarButton

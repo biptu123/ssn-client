@@ -12,6 +12,8 @@ import Cart from "./pages/Cart";
 import AdminRoutes from "./components/Routes/AdminRoutes";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddProduct from "./pages/admin/AddProduct";
+import Categories from "./pages/admin/Categories";
+import ShowProduct from "./pages/admin/ShowProduct";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/admin" Component={AdminRoutes}>
           <Route path="" Component={AdminDashboard} />
           <Route path="add-product" Component={AddProduct} />
+          <Route path="show-products" Component={ShowProduct} />
+          <Route path="categories" Component={Categories} />
         </Route>
         <Route path="/about" Component={About} />
         <Route path="/contact" Component={Contact} />

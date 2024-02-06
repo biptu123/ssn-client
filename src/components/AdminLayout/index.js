@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 import MainContent from "./MainContent";
 import Footer from "./Footer";
 import { Helmet } from "react-helmet";
+import { ToastContainer } from "react-toastify";
 
 const AdminLayout = (props) => {
   return (
@@ -26,6 +27,7 @@ const AdminLayout = (props) => {
           height: "87vh",
         }}
       >
+        <ToastContainer />
         <Sidebar />
         <MainContent>{props.children}</MainContent>
       </main>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import offer1 from "../assets/images/offer1.jpg";
 
@@ -13,13 +13,34 @@ import {
 } from "react-icons/io";
 import { CgGym } from "react-icons/cg";
 import "./styles/productsStyle.css";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Products = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [products, setProducts] = useState(null);
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+  const getProducts = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/product`
+      );
+
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <>
@@ -69,127 +90,24 @@ const Products = () => {
               </span>
             </div>
             <div className="products">
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
-              <div className="product">
-                <img src={offer1} alt="" />
-                <p className="product-name">Product Heading</p>
-                <span className="price-info" style={{ display: "flex" }}>
-                  <h5>&#8377;5000</h5>
-                  <span style={{ textDecoration: "line-through" }}>
-                    &#8377;4999
-                  </span>
-                </span>
-                <button className="add-product">Add to cart</button>
-              </div>
+              {products &&
+                products.map((product) => (
+                  <div className="product" key={product._id}>
+                    <img
+                      className="product-image"
+                      src={product.images[0].url}
+                      alt=""
+                    />
+                    <p className="product-name">{product.name}</p>
+                    <span className="price-info" style={{ display: "flex" }}>
+                      <h5>&#8377;{product.prices[0].price}</h5>
+                      <span style={{ textDecoration: "line-through" }}>
+                        &#8377;{product.prices[0].originalPrice}
+                      </span>
+                    </span>
+                    <button className="add-product">Add to cart</button>
+                  </div>
+                ))}
             </div>
           </section>
         </section>
