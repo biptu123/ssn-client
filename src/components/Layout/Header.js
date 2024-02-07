@@ -128,10 +128,19 @@ const Header = () => {
             <NavLinkButton to="/contact" onClick={handleNavigation}>
               Contact
             </NavLinkButton>
+
             {!auth?.user ? (
               <LoginButton className="m-login" onClick={handleNavigation} />
             ) : (
-              <DropdownMenu />
+              <>
+                <NavLinkButton
+                  to={auth.user.role === 1 ? "/admin" : "user"}
+                  onClick={handleNavigation}
+                >
+                  Dashboard
+                </NavLinkButton>
+                <DropdownMenu />
+              </>
             )}
           </ul>
         </Offcanvas.Body>
@@ -154,7 +163,15 @@ const Header = () => {
           {!auth?.user ? (
             <LoginButton className="m-login" onClick={handleNavigation} />
           ) : (
-            <DropdownMenu className="m-login" />
+            <>
+              <NavLinkButton
+                to={auth.user.role === 1 ? "/admin" : "user"}
+                onClick={handleNavigation}
+              >
+                Dashboard
+              </NavLinkButton>
+              <DropdownMenu className="m-login" />
+            </>
           )}
         </Nav>
       </Navbar.Collapse>

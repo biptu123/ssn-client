@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/auth";
 import offer1 from "../assets/images/offer1.jpg";
@@ -9,6 +9,8 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const OfferCarousel = () => {
   return (
@@ -33,35 +35,41 @@ const OfferCarousel = () => {
 };
 
 const Categories = () => {
+  const [categories, setCategories] = useState();
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/category`
+      );
+
+      if (response.data.success) {
+        setCategories(response.data.categories);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message);
+    }
+  };
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
     <div className="categories-wrapper">
       <div className="categories-title">Categories</div>
       <div className="categories">
-        <div className="card" style={{ width: "18rem" }}>
-          <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap 1" />
-          <h5 className="card-title">Proteins</h5>
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap 2" />
-          <h5 className="card-title">Pre/post workout</h5>
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap 3" />
-          <h5 className="card-title">Gainers</h5>
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap 4" />
-          <h5 className="card-title">Vitamins</h5>
-        </div>
-        <div className="card" style={{ width: "18rem" }}>
-          <div className="overlay"></div>
-          <img className="card-img-top" src={offer1} alt="Card image cap 5" />
-          <h5 className="card-title">Creatine</h5>
-        </div>
+        {categories &&
+          categories.map((category) => (
+            <div className="card" style={{ width: "18rem" }}>
+              <div className="overlay"></div>
+              <img
+                className="card-img-top"
+                src={category.image.url}
+                alt="Card image cap 5"
+              />
+              <h5 className="card-title">{category.name}</h5>
+            </div>
+          ))}
       </div>
     </div>
   );

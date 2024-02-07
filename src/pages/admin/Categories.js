@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import AdminLayout from "../../components/AdminLayout";
 import styled from "styled-components";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useAuth } from "../../context/auth";
 import { Modal } from "antd";
+import offer1 from "../../assets/images/offer1.jpg";
 
 const TYPE = {
   UPDATE: "update",
@@ -20,12 +21,18 @@ const CategoriesWrapper = styled.div`
 `;
 const CategoryCard = styled.div`
   height: fit-content;
-  background-color: #a3aab1;
+  background-color: #a6b0bbff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: start;
   border-radius: 10px;
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  box-shadow: 10px 10px 10px black;
+  border-left: 2px solid black;
+  border-top: 2px solid black;
 `;
 const CategoryName = styled.div`
   font-size: 1.5rem;
@@ -34,13 +41,15 @@ const CategoryName = styled.div`
   width: 100%;
   margin: 20px 0;
   padding: 5px 20px;
-  background-color: #0080ff;
+  background-color: #0080ff9d;
+  z-index: 10;
 `;
 const ActionButtons = styled.div`
   margin: 20px 20px;
   padding: 5px 0;
   display: flex;
   gap: 10px;
+  z-index: 10;
 `;
 const EditButton = styled.button`
   padding: 5px 20px;
@@ -65,6 +74,10 @@ const AddButton = styled.button`
   justify-content: center;
   align-items: center;
   position: relative;
+
+  box-shadow: 10px 10px 10px black;
+  border-left: 2px solid black;
+  border-top: 2px solid black;
   &::before {
     position: absolute;
     content: "";
@@ -101,6 +114,9 @@ const NameInputForm = styled.form`
   margin-top: 30px;
   width: 100%;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 20px;
 `;
 const NameInput = styled.input`
@@ -119,11 +135,55 @@ const SubmitButton = styled.button`
   font-weight: bolder;
 `;
 
+const CategoryImage = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 8;
+`;
+
+const ImageInput = styled.input`
+  border: 2px solid #858585;
+  width: 30%;
+  aspect-ratio: 1;
+  font-size: 20rem;
+  padding-top: auto;
+  border-radius: 50%;
+  position: relative;
+
+  &::after {
+    content: "upload image";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(163, 90, 90, 1);
+    border-radius: 20px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+`;
+
+const ImagePreview = styled.img`
+  width: 30%;
+  border: 1px solid #858585;
+`;
+
 const Categories = () => {
   const [categories, setCategories] = useState(null);
   const [auth] = useAuth();
 
   const [name, setName] = useState(null);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [visible, setvisible] = useState(false);
 
@@ -164,13 +224,24 @@ const Categories = () => {
     }
   };
 
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(selectedImage);
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setImage(reader.result);
+    };
+  };
+
   const handleSubmit = async (e, type) => {
     e.preventDefault();
     if (type === TYPE.ADD) {
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API}/api/v1/category`,
-          { name },
+          { name, image },
           {
             headers: {
               Authorization: `${auth?.token}`,
@@ -193,7 +264,7 @@ const Categories = () => {
       try {
         const response = await axios.put(
           `${process.env.REACT_APP_API}/api/v1/category/${_id}`,
-          { name },
+          { name, image },
           {
             headers: {
               Authorization: `${auth?.token}`,
@@ -222,13 +293,18 @@ const Categories = () => {
         <h1 className="text-end me-4 my-2">Categories</h1>
         <CategoriesWrapper>
           {categories &&
-            categories.map(({ _id, name }) => (
+            categories.map(({ _id, name, image }) => (
               <CategoryCard key={_id}>
+                <CategoryImage
+                  src={image && image?.url ? image?.url : offer1}
+                />
                 <CategoryName>{name}</CategoryName>
                 <ActionButtons>
                   <EditButton
                     onClick={() => {
                       setName(name);
+                      setImagePreview(image);
+                      setImage(image);
                       setvisible({ _id });
                     }}
                   >
@@ -243,14 +319,26 @@ const Categories = () => {
           <AddButton
             onClick={() => {
               setName("");
+              setImagePreview(null);
+              setImage(null);
               setvisible(TYPE.ADD);
             }}
           ></AddButton>
         </CategoriesWrapper>
         <Modal onCancel={() => setvisible(false)} footer={null} open={visible}>
           <NameInputForm onSubmit={(e) => handleSubmit(e, visible)}>
-            <NameInput value={name} onChange={(e) => setName(e.target.value)} />
+            <NameInput
+              placeholder="Enter category name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <ImageInput
+              type="file"
+              // value={image}
+              onChange={handleImageChange}
+            />
             <SubmitButton type="submit">submit</SubmitButton>
+            <ImagePreview src={imagePreview} />
           </NameInputForm>
         </Modal>
       </AdminLayout>

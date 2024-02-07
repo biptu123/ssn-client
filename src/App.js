@@ -14,6 +14,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AddProduct from "./pages/admin/AddProduct";
 import Categories from "./pages/admin/Categories";
 import ShowProduct from "./pages/admin/ShowProduct";
+import BestDeals from "./pages/admin/BestDeals";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="add-product" Component={AddProduct} />
           <Route path="show-products" Component={ShowProduct} />
           <Route path="categories" Component={Categories} />
+          <Route path="bestdeals" Component={BestDeals} />
         </Route>
         <Route path="/about" Component={About} />
         <Route path="/contact" Component={Contact} />
