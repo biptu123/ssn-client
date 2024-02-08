@@ -15,10 +15,13 @@ import { CgGym } from "react-icons/cg";
 import "./styles/productsStyle.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useCart } from "../context/cart";
 
 const Products = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState(null);
+
+  const { addToCart } = useCart();
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -105,7 +108,20 @@ const Products = () => {
                         &#8377;{product.prices[0].originalPrice}
                       </span>
                     </span>
-                    <button className="add-product">Add to cart</button>
+                    <button
+                      className="add-product"
+                      onClick={() =>
+                        addToCart({
+                          ...product,
+                          price: product.prices[0].price,
+                          originalPrice: product.prices[0].originalPrice,
+                          quantity: product.prices[0].quantity,
+                        })
+                      }
+                    >
+                      Add to cart
+                    </button>
+                    <button className="show-more">show more</button>
                   </div>
                 ))}
             </div>

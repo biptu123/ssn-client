@@ -156,6 +156,12 @@ const Signin = () => {
     }
   };
 
+  useEffect(() => {
+    if (inputRefs[0].current) {
+      inputRefs[0].current.focus();
+    }
+  }, [verifyForm]);
+
   return (
     <>
       <Loader loading={loading} />

@@ -4,6 +4,7 @@ import { useAuth } from "../../context/auth";
 import { Nav, Navbar, Offcanvas } from "react-bootstrap";
 import { FaShoppingCart } from "react-icons/fa";
 import logo from "../../assets/images/logo.jpg";
+import { useCart } from "../../context/cart";
 
 const Toggler = ({ toggleFlag, setToggleFlag }) => {
   return (
@@ -39,10 +40,11 @@ const LoginButton = ({ className, onClick }) => {
 };
 
 const CartButton = () => {
+  const { cart } = useCart();
   const navigate = useNavigate();
   return (
     <button
-      data-quantity="10"
+      data-quantity={cart.length}
       className="btn-cart"
       onClick={() => navigate("/cart")}
     >
@@ -91,8 +93,8 @@ const NavLinkButton = ({ children, to, active, onClick }) => {
 
 const Header = () => {
   const [toggleFlag, setToggleFlag] = useState(false);
-  const [auth, setAuth] = useAuth();
-  const navigate = useNavigate();
+  const [auth] = useAuth();
+  // const navigate = useNavigate();
 
   const handleNavigation = () => {
     // Close the off-canvas menu

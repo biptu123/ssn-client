@@ -13,8 +13,11 @@ import {
   Title,
   Button,
 } from "./styles/Cart.styled.js";
+import { useCart } from "../context/cart.js";
 
 const Cart = () => {
+  const { cart, removeFromCart, addMore, removeMore } = useCart();
+
   return (
     <>
       <Layout title="Contact us | SSN">
@@ -30,32 +33,50 @@ const Cart = () => {
                       </h4>
                     </div>
                     <div className="col align-self-center text-right text-muted">
-                      3 items
+                      {cart && cart.length ? `${cart.length} items` : ""}
                     </div>
                   </div>
                 </Title>
                 <div className="row border-top">
-                  <Main className="row align-items-center">
-                    <div className="col-2">
-                      <img
-                        className="img-fluid"
-                        src="https://i.imgur.com/1GrakTl.jpg"
-                        style={{ width: "3.5rem" }}
-                      />
-                    </div>
-                    <div className="col">
-                      <div className="row text-muted">Shirt</div>
-                      <div className="row">Cotton T-shirt</div>
-                    </div>
-                    <div className="col">
-                      <A>-</A>
-                      <span className="border">1</span>
-                      <A>+</A>
-                    </div>
-                    <div className="col">
-                      € 44.00 <Close>Remove</Close>
-                    </div>
-                  </Main>
+                  {cart && cart.length ? (
+                    cart.map((product, index) => (
+                      <Main
+                        className="row align-items-center"
+                        key={product._id}
+                      >
+                        <div className="col-2">
+                          <img
+                            alt={`product image ${product._id}`}
+                            className="img-fluid"
+                            src={product.images[0].url}
+                            style={{ width: "3.5rem" }}
+                          />
+                        </div>
+                        <div className="col">
+                          <div className="row text-muted">
+                            {product?.category?.name}
+                          </div>
+                          <div className="row">{product.name}</div>
+                          <div className="row">{product.quantity}</div>
+                        </div>
+                        <div className="col">
+                          <A onClick={() => removeMore(product)}>-</A>
+                          <b className="border">{product.noOfItems}</b>
+                          <A onClick={() => addMore(product)}>+</A>
+                        </div>
+                        <div className="col" style={{ marginTop: "20px" }}>
+                          &#8377; {product.noOfItems * product.price}
+                          <Close onClick={() => removeFromCart(product)}>
+                            Remove
+                          </Close>
+                        </div>
+                      </Main>
+                    ))
+                  ) : (
+                    <Main className="row align-items-center">
+                      <h4 className="text-center">Cart Is Empty</h4>
+                    </Main>
+                  )}
                 </div>
                 <div className="row border-top"></div>
 

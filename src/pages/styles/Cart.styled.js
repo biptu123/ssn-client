@@ -58,6 +58,7 @@ export const Main = styled.div`
 `;
 
 export const Close = styled.span`
+  margin-left: 10px;
   padding: 5px;
   font-size: 0.7rem;
   font-weight: bold;
