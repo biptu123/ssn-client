@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import {
   A,
@@ -12,16 +12,37 @@ import {
   Summary,
   Title,
   Button,
+  ProgressStation,
+  ProgressBar,
 } from "./styles/Cart.styled.js";
 import { useCart } from "../context/cart.js";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const Cart = () => {
+  const [totalAmount, setTotalAmount] = useState();
   const { cart, removeFromCart, addMore, removeMore } = useCart();
 
+  const navigate = useNavigate();
+
+  const getTotalAmount = () => {
+    let totalAmount = 0;
+    cart.map((product) => {
+      totalAmount += product.price * product.noOfItems;
+    });
+    return totalAmount;
+  };
   return (
     <>
-      <Layout title="Contact us | SSN">
+      <Layout title="Cart | SSN">
         <CartContainer>
+          <ProgressBar>
+            <ProgressStation name="Cart" active>
+              1
+            </ProgressStation>
+            <ProgressStation name="Add address">2</ProgressStation>
+            <ProgressStation name="Payment">3</ProgressStation>
+          </ProgressBar>
           <Card className="card">
             <div className="row">
               <ShoppingCart className="col-md-8 cart">
@@ -42,7 +63,7 @@ const Cart = () => {
                     cart.map((product, index) => (
                       <Main
                         className="row align-items-center"
-                        key={product._id}
+                        key={`${product._id}-${index}`}
                       >
                         <div className="col-2">
                           <img
@@ -80,8 +101,12 @@ const Cart = () => {
                 </div>
                 <div className="row border-top"></div>
 
-                <div className="back-to-shop" style={{ marginTop: "4.5rem" }}>
-                  <a href="#">←</a>
+                <div
+                  className="back-to-shop"
+                  style={{ marginTop: "4.5rem", cursor: "pointer" }}
+                  onClick={() => navigate("/products")}
+                >
+                  <A>←</A>
                   <span className="text-muted">Back to shop</span>
                 </div>
               </ShoppingCart>
@@ -94,17 +119,19 @@ const Cart = () => {
                 <hr style={{ marginTop: "1.25rem" }} />
                 <div className="row">
                   <div className="col" style={{ paddingLeft: 0 }}>
-                    ITEMS 3
+                    ITEMS {cart.length}
                   </div>
-                  <div className="col text-right">€ 132.00</div>
+                  <div className="col text-right">
+                    &#8377; {getTotalAmount()}
+                  </div>
                 </div>
                 <form style={{ padding: "2vh 0" }}>
-                  <p>SHIPPING</p>
+                  {/* <p>SHIPPING</p>
                   <Select>
                     <option className="text-muted">
-                      Standard-Delivery- €5.00
+                      Standard-Delivery- &#8377; 5.00
                     </option>
-                  </Select>
+                  </Select> */}
                   <p>GIVE CODE</p>
                   <Input id="code" placeholder="Enter your code" />
                 </form>
@@ -116,9 +143,13 @@ const Cart = () => {
                   }}
                 >
                   <div className="col">TOTAL PRICE</div>
-                  <div className="col text-right">€ 137.00</div>
+                  <div className="col text-right">
+                    &#8377; {getTotalAmount()}
+                  </div>
                 </div>
-                <Button className="btn">CHECKOUT</Button>
+                <Button className="btn" onClick={() => navigate("/checkout")}>
+                  CHECKOUT
+                </Button>
               </Summary>
             </div>
           </Card>

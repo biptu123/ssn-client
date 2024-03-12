@@ -54,7 +54,6 @@ const Signin = () => {
       handleSubmit(verificationCode.join("") + value);
     }
 
-    // Focus on the next input if the value is not empty
     if (value !== "" && index < inputRefs.length - 1) {
       inputRefs[index + 1].current.focus();
     }

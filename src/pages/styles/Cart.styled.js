@@ -4,7 +4,9 @@ export const CartContainer = styled.section`
   background: #ddd;
   padding: 20px;
   vertical-align: middle;
+  min-height: 80vh;
   display: flex;
+  flex-direction: column;
   margin-top: 80px;
   font-family: sans-serif;
   font-size: 0.8rem;
@@ -122,5 +124,37 @@ export const Button = styled.button`
   &:hover {
     background-color: #000;
     color: white;
+  }
+`;
+
+export const ProgressBar = styled.div`
+  height: 30px;
+  width: 100%;
+  display: flex;
+  border-bottom: 3px solid black;
+  margin-bottom: 60px;
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+`;
+export const ProgressStation = styled.div`
+  height: 200%;
+  aspect-ratio: 1;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: ${(props) => (props.active ? `#000000` : `#c0c0c0`)};
+  color: ${(props) => (!props.active ? `#000000` : `#c0c0c0`)};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  position: relative;
+  &::before {
+    content: ${(props) => `"${props.name}"`};
+    color: #000000;
+    position: absolute;
+    width: 200%;
+    text-align: center;
+    top: 100%;
   }
 `;

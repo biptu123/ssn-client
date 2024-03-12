@@ -15,14 +15,17 @@ import AddProduct from "./pages/admin/AddProduct";
 import Categories from "./pages/admin/Categories";
 import ShowProduct from "./pages/admin/ShowProduct";
 import BestDeals from "./pages/admin/BestDeals";
+import ProductDetails from "./pages/ProductDetails";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
     <>
       <Routes>
         <Route exact path="/" Component={Home} />
-        <Route path="/user" Component={PrivateRoute}>
-          <Route path="" Component={Dashboard} />
+        <Route path="/" Component={PrivateRoute}>
+          <Route path="checkout" Component={Checkout} />
+          <Route path="user" Component={Dashboard} />
         </Route>
         <Route path="/admin" Component={AdminRoutes}>
           <Route path="" Component={AdminDashboard} />
@@ -34,6 +37,7 @@ function App() {
         <Route path="/about" Component={About} />
         <Route path="/contact" Component={Contact} />
         <Route path="/products" Component={Products} />
+        <Route path="/product/:id" Component={ProductDetails} />
         <Route path="/login" Component={Signin} />
         <Route path="/cart" Component={Cart} />
         <Route path="/*" Component={NotFound} />

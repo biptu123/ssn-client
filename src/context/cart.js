@@ -42,7 +42,10 @@ const CartProvider = ({ children }) => {
       if (updatedCart[existingProductIndex].noOfItems > 1) {
         updatedCart[existingProductIndex].noOfItems -= 1;
       } else if (updatedCart[existingProductIndex].noOfItems === 1) {
-        updatedCart = cart.filter((item) => item._id !== product._id);
+        updatedCart = cart.filter(
+          (item) =>
+            !(item._id === product._id && item.quantity === product.quantity)
+        );
       }
     } else {
       updatedCart = [...cart, { ...product, noOfItems: 1 }];

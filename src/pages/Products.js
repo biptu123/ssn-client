@@ -3,7 +3,7 @@ import Layout from "../components/Layout/Layout";
 import offer1 from "../assets/images/offer1.jpg";
 
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiShop } from "react-icons/ci";
 import { FaJar } from "react-icons/fa6";
 import { GiMasonJar, GiMedicinePills, GiMedicines } from "react-icons/gi";
@@ -22,6 +22,8 @@ const Products = () => {
   const [products, setProducts] = useState(null);
 
   const { addToCart } = useCart();
+
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -121,7 +123,12 @@ const Products = () => {
                     >
                       Add to cart
                     </button>
-                    <button className="show-more">show more</button>
+                    <button
+                      className="show-more"
+                      onClick={() => navigate(`/product/${product._id}`)}
+                    >
+                      show more
+                    </button>
                   </div>
                 ))}
             </div>
