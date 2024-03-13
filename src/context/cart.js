@@ -79,9 +79,22 @@ const CartProvider = ({ children }) => {
     toast.error("Item removed from your cart");
   };
 
+  const emptyCart = () => {
+    const updatedCart = [];
+    setCart(updatedCart);
+    localStorage.setItem(`cart`, JSON.stringify(updatedCart));
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, addMore, removeMore }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        addMore,
+        removeMore,
+        emptyCart,
+      }}
     >
       {children}
     </CartContext.Provider>

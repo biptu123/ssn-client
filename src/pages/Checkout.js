@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import {
   CartContainer,
@@ -10,6 +10,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/auth";
 import styled from "styled-components";
+import { MdEdit } from "react-icons/md";
+import { FaRegTrashCan } from "react-icons/fa6";
+import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const AddressWrapper = styled.div`
   display: flex;
@@ -22,11 +26,13 @@ const AddAddress = styled.button`
   width: 200px;
 `;
 const Checkout = () => {
+  const [loading, setLoading] = useState(false);
   const [visible, setvisible] = useState(true);
-
-  const [address, setaddress] = useState({
+  const [addresses, setAddresses] = useState([]);
+  const [address, setAddress] = useState({
     name: null,
     email: null,
+    phone: null,
     pincode: null,
     state: null,
     street: null,
@@ -34,9 +40,34 @@ const Checkout = () => {
     locality: null,
   });
 
-  const [auth] = useAuth();
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const [auth, setAuth] = useAuth();
+  const navigate = useNavigate();
+
+  const getAddresses = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/user/get-addresses`,
+        {
+          headers: {
+            Authorization: `${auth?.token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        setAddresses(response.data.addresses);
+        if (response.data.addresses.length > 0) setvisible(false);
+      } else {
+        // toast.error(response.data.message);
+      }
+    } catch (error) {
+      // toast.error(error.response?.data?.message || "An error occurred");
+    }
+  };
 
   const addAddress = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -50,21 +81,30 @@ const Checkout = () => {
       );
       if (response.data.success) {
         toast.success(response.data.message);
+        getAddresses();
+        setAuth({
+          ...auth,
+          address: response.data.user.address,
+        });
+        navigate("/payment");
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 200);
   };
 
   const handleChange = (e) => {
-    setaddress({ ...address, [e.target.id]: e.target.value });
+    setAddress({ ...address, [e.target.id]: e.target.value });
   };
 
   const handlePinChange = async (e) => {
     const pincode = e.target.value;
-    setaddress((prevAddress) => ({ ...prevAddress, [e.target.id]: pincode }));
+    setAddress((prevAddress) => ({ ...prevAddress, [e.target.id]: pincode }));
 
     try {
       const response = await axios.get(
@@ -78,8 +118,7 @@ const Checkout = () => {
         ) {
           const state = firstResult.PostOffice[0].State;
           const district = firstResult.PostOffice[0].District;
-          setaddress((prevAddress) => ({ ...prevAddress, state, district }));
-          console.log(address);
+          setAddress((prevAddress) => ({ ...prevAddress, state, district }));
         }
       }
     } catch (error) {
@@ -88,8 +127,54 @@ const Checkout = () => {
     }
   };
 
+  const selectAddress = (address) => {
+    setAuth({
+      ...auth,
+      address,
+    });
+    navigate("/payment");
+  };
+  const editAddress = (address) => {
+    setAddress(address);
+    setvisible(true);
+  };
+  const deleteAddress = async (a) => {
+    setAuth({
+      ...auth,
+      address: null,
+    });
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/api/v1/user/remove-address`,
+        { address: a },
+        {
+          headers: {
+            Authorization: `${auth?.token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        toast.success(response.data.message);
+        getAddresses();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred");
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 200);
+  };
+
+  useEffect(() => {
+    getAddresses();
+  }, []);
+
   return (
     <Layout title="Checkout | SSN">
+      <Loader loading={loading} />
       <CartContainer>
         <ProgressBar>
           <ProgressStation name="Cart">1</ProgressStation>
@@ -102,10 +187,72 @@ const Checkout = () => {
         <AddressWrapper>
           <AddAddress
             className="btn btn-outline-secondary"
-            onClick={() => setvisible(true)}
+            onClick={() => {
+              setAddress({
+                name: "",
+                email: "",
+                phone: "",
+                pincode: "",
+                state: "",
+                street: "",
+                district: "",
+                locality: "",
+              });
+              setvisible(true);
+            }}
           >
             + Add new address
           </AddAddress>
+          <div className="my-4 container-fluid">
+            <h2 className="">Select Address</h2>
+            <table className="table table-hover">
+              <tbody>
+                {addresses.length > 0
+                  ? addresses.map((address) => (
+                      <tr className="mt-2" key={address._id}>
+                        <td colSpan={3} onClick={() => selectAddress(address)}>
+                          <div className="d-flex flex-column">
+                            <h6 className="mb-1">{address.name}</h6>
+                            <small className="text-muted">
+                              {address?.email}
+                            </small>
+                            <small className="text-muted">
+                              {address?.phone}
+                            </small>
+                            <small className="text-muted">
+                              State: {address.state}
+                            </small>
+                            <small className="text-muted">
+                              District: {address.district}
+                            </small>
+                            <small className="text-muted">
+                              Locality: {address.locality || "N/A"}
+                            </small>
+                            <small className="text-muted">
+                              {address.street}
+                            </small>
+                          </div>
+                        </td>
+                        <td className="text-end">
+                          <button
+                            className="btn btn-sm btn-outline-dark m-1"
+                            onClick={() => editAddress(address)}
+                          >
+                            <MdEdit />
+                          </button>
+                          <button
+                            className="btn btn-sm btn-dark m-1"
+                            onClick={() => deleteAddress(address)}
+                          >
+                            <FaRegTrashCan />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  : "You have no  saved addresses"}
+              </tbody>
+            </table>
+          </div>
         </AddressWrapper>
       </CartContainer>
       <Modal onCancel={() => setvisible(false)} open={visible} footer={null}>
@@ -135,6 +282,19 @@ const Checkout = () => {
             />
             <label className="form-label" htmlFor="form3Example3">
               Enter email *
+            </label>
+          </div>
+          <div className="form-outline mb-4 form-floating">
+            <input
+              type="text"
+              id="phone"
+              className="form-control form-control-sm"
+              placeholder="Enter phone number*"
+              value={address.phone}
+              onChange={handleChange}
+            />
+            <label className="form-label" htmlFor="phone">
+              Enter phone number *
             </label>
           </div>
           <div className="form-outline mb-4 form-floating">

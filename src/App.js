@@ -17,6 +17,7 @@ import ShowProduct from "./pages/admin/ShowProduct";
 import BestDeals from "./pages/admin/BestDeals";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route exact path="/" Component={Home} />
         <Route path="/" Component={PrivateRoute}>
           <Route path="checkout" Component={Checkout} />
+          <Route path="payment" Component={Payment} />
           <Route path="user" Component={Dashboard} />
         </Route>
         <Route path="/admin" Component={AdminRoutes}>
